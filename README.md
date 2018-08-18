@@ -1,5 +1,6 @@
 # TreeAssist
 A plugin for Cuberite 
+Modify form [TreeAssist](https://github.com/NiLSPACE/TreeAssist) Author: NiLSPACE 
 
 # How to use
 1.Please make a directory named 'TreeAssist' in 'Plugins' folder, then put file 'TreeAssist.lua' in this folder.  
