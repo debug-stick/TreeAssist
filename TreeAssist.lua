@@ -21,12 +21,24 @@ function MyOnPlayerBreakingBlock(a_Player, a_BlockX, a_BlockY, a_BlockZ, a_Block
 		return false
 	end
 	local a_World = a_Player:GetWorld()
-	CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ ,a_BlockType, a_BlockMeta % 4, a_LeavesMap = {})
+	a_LeavesMap = {}
+	CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ ,a_BlockType, a_BlockMeta % 4, a_LeavesMap, a_BlockX, a_BlockZ)
 end
 
-function CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ ,a_BlockType, a_BlockMeta, a_LeavesMap)
+function CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ ,a_BlockType, a_BlockMeta, a_LeavesMap ,a_BlockCX, a_BlockCZ)
+	if(a_BlockX < a_BlockCX - 5 or a_BlockX > a_BlockCX + 5) then 
+		return
+	end
+	if(a_BlockZ < a_BlockCZ - 5 or a_BlockZ > a_BlockCZ + 5) then 
+		return
+	end
 	local a_BlockID = a_World:GetBlock(a_BlockX, a_BlockY, a_BlockZ)
-	if(not (BlockIsWood(a_BlockID) or BlockIsLeaves(a_BlockID)) or (a_BlockID ~= a_BlockType)) then
+	local a_BlockMT = a_World:GetBlockMeta(a_BlockX, a_BlockY, a_BlockZ) % 4
+	if(not (BlockIsWood(a_BlockID) or BlockIsLeaves(a_BlockID))) then
+		return
+	end
+	--is wood but type is diffirent
+	if(BlockIsWood(a_BlockID) and a_BlockMT ~= a_BlockMeta) then 
 		return
 	end
 	if(BlockIsWood(a_BlockID)) then
@@ -47,11 +59,11 @@ function CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ ,a_BlockType, a_Block
 			a_LeavesMap[a_BlockX .. ":" .. a_BlockY .. ":" .. a_BlockZ] = true
 		end
 	end
-	CollectWood(a_World, a_BlockX - 1, a_BlockY, a_BlockZ,a_BlockType, a_BlockMeta, a_LeavesMap)
-	CollectWood(a_World, a_BlockX + 1, a_BlockY, a_BlockZ,a_BlockType, a_BlockMeta, a_LeavesMap)
-	CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ - 1,a_BlockType, a_BlockMeta, a_LeavesMap)
-	CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ + 1,a_BlockType, a_BlockMeta, a_LeavesMap)
-	CollectWood(a_World, a_BlockX, a_BlockY + 1, a_BlockZ,a_BlockType, a_BlockMeta, a_LeavesMap)
+	CollectWood(a_World, a_BlockX - 1, a_BlockY, a_BlockZ,a_BlockType, a_BlockMeta, a_LeavesMap, a_BlockCX, a_BlockCZ)
+	CollectWood(a_World, a_BlockX + 1, a_BlockY, a_BlockZ,a_BlockType, a_BlockMeta, a_LeavesMap, a_BlockCX, a_BlockCZ)
+	CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ - 1,a_BlockType, a_BlockMeta, a_LeavesMap, a_BlockCX, a_BlockCZ)
+	CollectWood(a_World, a_BlockX, a_BlockY, a_BlockZ + 1,a_BlockType, a_BlockMeta, a_LeavesMap, a_BlockCX, a_BlockCZ)
+	CollectWood(a_World, a_BlockX, a_BlockY + 1, a_BlockZ,a_BlockType, a_BlockMeta, a_LeavesMap, a_BlockCX, a_BlockCZ)
 end
 
 function BlockIsWood(a_BlockID)
